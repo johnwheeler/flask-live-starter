@@ -91,5 +91,8 @@ ENV/
 # Vagrant
 .vagrant
 
+# Project configuration
+settings.cfg
+
 # Misc
 .DS_Store
