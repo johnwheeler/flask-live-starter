@@ -10,6 +10,7 @@ This is a work in progress. It'll be ready to rock in less than a week. Stay tun
 * Postgresql
 
 ```
+vagrant up
 fab provision --hosts 192.168.33.10 --user vagrant -i .vagrant/machines/default/virtualbox/private_key
 fab deploy --hosts 192.168.33.10 --user vagrant -i .vagrant/machines/default/virtualbox/private_key
 fab configure --hosts 192.168.33.10 --user vagrant -i .vagrant/machines/default/virtualbox/private_key
