@@ -87,3 +87,9 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Vagrant
+.vagrant
+
+# Misc
+.DS_Store
