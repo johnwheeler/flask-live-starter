@@ -5,13 +5,14 @@ Go from 0 to 100 MPH with the infrastructure behind the Python web app in [From 
 This is a work in progress. It'll be ready to rock in less than a week. Stay tuned!
 
 * Flask
+* Fabric
 * Gunicorn
 * Nginx
 * Postgresql
 
 ```
 vagrant up
-fab provision --hosts 192.168.33.10 --user vagrant -i .vagrant/machines/default/virtualbox/private_key
-fab deploy --hosts 192.168.33.10 --user vagrant -i .vagrant/machines/default/virtualbox/private_key
-fab configure --hosts 192.168.33.10 --user vagrant -i .vagrant/machines/default/virtualbox/private_key
+fab provision
+fab deploy
+fab configure
 ```
