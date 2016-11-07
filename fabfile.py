@@ -12,6 +12,7 @@ APP_NAME = 'app'
 
 REMOTE_DEPLOY_DIR = '/var/www/html/{}'.format(APP_NAME)
 REMOTE_VENV = '{}/venv'.format(REMOTE_DEPLOY_DIR)
+REMOTE_APP_DIR = '{}/{}'.format(REMOTE_DEPLOY_DIR, APP_NAME)
 
 LOCAL_ARCHIVE = './dist/{}.tar.gz'.format(APP_NAME)
 REMOTE_ARCHIVE = '/root/{}.tar.gz'.format(APP_NAME)
@@ -94,8 +95,7 @@ def _upload_and_extract_archive():
     if not exists(REMOTE_DEPLOY_DIR, use_sudo=True):
         sudo('mkdir {}'.format(REMOTE_DEPLOY_DIR))
 
-    appdir = '{}/{}'.format(REMOTE_DEPLOY_DIR, APP_NAME)
-    sudo('rm -rf {}'.format(appdir))
+    sudo('rm -rf {}'.format(REMOTE_APP_DIR))
     sudo('tar xmzf {} -C {} --strip-components=2'.format(REMOTE_ARCHIVE, REMOTE_DEPLOY_DIR))
     sudo('rm {}'.format(REMOTE_ARCHIVE))
 
