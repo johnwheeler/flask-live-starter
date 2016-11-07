@@ -1,7 +1,6 @@
-from fabric.api import *
-from fabric.utils import abort, puts
+from fabric.api import env, local, sudo, put
+from fabric.utils import puts
 from fabric.contrib.files import exists
-from fabric.contrib.console import confirm
 from fabric.context_managers import quiet
 
 env.user = 'vagrant'
@@ -10,20 +9,18 @@ env.key_filename = '.vagrant/machines/default/virtualbox/private_key'
 
 
 APP_NAME = 'app'
-DEPLOY_DIR = '/var/www/html/{}'.format(APP_NAME)
-VIRTUALENV = '{}/venv'.format(DEPLOY_DIR)
+
+REMOTE_DEPLOY_DIR = '/var/www/html/{}'.format(APP_NAME)
+REMOTE_VENV = '{}/venv'.format(REMOTE_DEPLOY_DIR)
+
 LOCAL_ARCHIVE = './dist/{}.tar.gz'.format(APP_NAME)
 REMOTE_ARCHIVE = '/root/{}.tar.gz'.format(APP_NAME)
 
+LOCAL_GUNICORN_CONF_FILE = './etc/{}.gunicorn.conf'.format(APP_NAME)
+REMOTE_GUNICORN_CONF_FILE = '/etc/gunicorn.d/{}.conf'.format(APP_NAME)
 
-def configure():
-    msg = 'This will overwrite your nginx and gunicorn configuration. Proceed?'
-    if confirm(msg, default=False):
-        put('etc/app.gunicorn.conf', '/etc/gunicorn.d/', use_sudo=True)
-        sudo("service gunicorn restart")
-
-        put('etc/app.nginx.conf', '/etc/nginx/conf.d/', use_sudo=True)
-        sudo('service nginx restart')
+LOCAL_NGINX_CONF_FILE = './etc/{}.nginx.conf'.format(APP_NAME)
+REMOTE_NGINX_CONF_FILE = '/etc/nginx/conf.d/{}.conf'.format(APP_NAME)
 
 
 def dist():
@@ -36,12 +33,24 @@ def dist():
 
 
 def deploy():
+    if not exists(REMOTE_DEPLOY_DIR, use_sudo=True):
+        sudo('mkdir {}'.format(REMOTE_DEPLOY_DIR))
+
     dist()
     _upload_and_extract_archive()
     _update_py_deps()
-    sudo('chown -R root:www-data {}'.format(DEPLOY_DIR))
-    sudo('chmod -R og-rwx,g+rxs {}'.format(DEPLOY_DIR))
+    sudo('chown -R root:www-data {}'.format(REMOTE_DEPLOY_DIR))
+    sudo('chmod -R og-rwx,g+rxs {}'.format(REMOTE_DEPLOY_DIR))
+
+    if not exists(REMOTE_NGINX_CONF_FILE):
+        put(LOCAL_NGINX_CONF_FILE, REMOTE_NGINX_CONF_FILE, use_sudo=True)
+        sudo('service nginx restart')
+
+    if not exists(REMOTE_GUNICORN_CONF_FILE):
+        put(LOCAL_GUNICORN_CONF_FILE, REMOTE_GUNICORN_CONF_FILE, use_sudo=True)
+
     sudo("service gunicorn restart")
+
     clean()
 
 
@@ -50,17 +59,11 @@ def clean():
 
 
 def clean_remote():
-    sudo('rm -rf {}'.format(DEPLOY_DIR))
+    sudo('rm -rf {}'.format(REMOTE_DEPLOY_DIR))
 
 
 def provision():
-    puts('updating and upgrading system. this may take a while...')
-    with quiet():
-        sudo("sh -c 'echo deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main > /etc/apt/sources.list.d/pgdg.list'")
-        sudo('wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -')
-        sudo('apt-get update')
-        sudo('apt-get upgrade -y')
-    puts('system updated and upgraded')
+    _system_update_upgrade()
     # firewall
     _install('ufw')
     _configure_firewall()
@@ -88,19 +91,19 @@ def provision():
 def _upload_and_extract_archive():
     put(LOCAL_ARCHIVE, REMOTE_ARCHIVE, use_sudo=True)
 
-    if not exists(DEPLOY_DIR, use_sudo=True):
-        sudo('mkdir {}'.format(DEPLOY_DIR))
+    if not exists(REMOTE_DEPLOY_DIR, use_sudo=True):
+        sudo('mkdir {}'.format(REMOTE_DEPLOY_DIR))
 
-    appdir = '{}/{}'.format(DEPLOY_DIR, APP_NAME)
+    appdir = '{}/{}'.format(REMOTE_DEPLOY_DIR, APP_NAME)
     sudo('rm -rf {}'.format(appdir))
-    sudo('tar xmzf {} -C {} --strip-components=2'.format(REMOTE_ARCHIVE, DEPLOY_DIR))
+    sudo('tar xmzf {} -C {} --strip-components=2'.format(REMOTE_ARCHIVE, REMOTE_DEPLOY_DIR))
     sudo('rm {}'.format(REMOTE_ARCHIVE))
 
 
 def _update_py_deps():
-    if not exists(VIRTUALENV, use_sudo=True):
-        sudo('virtualenv {}'.format(VIRTUALENV))
-    sudo('{}/bin/pip install -r {}/requirements.txt'.format(VIRTUALENV, DEPLOY_DIR))
+    if not exists(REMOTE_VENV, use_sudo=True):
+        sudo('virtualenv {}'.format(REMOTE_VENV))
+    sudo('{}/bin/pip install -r {}/requirements.txt'.format(REMOTE_VENV, REMOTE_DEPLOY_DIR))
 
 
 def _install(pkg):
@@ -108,6 +111,16 @@ def _install(pkg):
     with quiet():
         sudo('DEBIAN_FRONTEND=noninteractive apt-get install {} -y'.format(pkg))
     puts('{} installed'.format(pkg))
+
+
+def _system_update_upgrade():
+    puts('updating and upgrading system. this may take a while...')
+    with quiet():
+        sudo("sh -c 'echo deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main > /etc/apt/sources.list.d/pgdg.list'")
+        sudo('wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -')
+        sudo('apt-get update')
+        sudo('apt-get upgrade -y')
+    puts('system updated and upgraded')
 
 
 def _configure_firewall():

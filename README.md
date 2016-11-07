@@ -14,5 +14,4 @@ This is a work in progress. It'll be ready to rock in less than a week. Stay tun
 vagrant up
 fab provision
 fab deploy
-fab configure
 ```
