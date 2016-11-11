@@ -1,4 +1,0 @@
-SECRET_KEY = "get one at https://www.grc.com/passwords.htm"
-
-SQLALCHEMY_DATABASE_URI = "postgres://app"
-SQLALCHEMY_TRACK_MODIFICATIONS = False
