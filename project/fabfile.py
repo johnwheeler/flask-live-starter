@@ -105,23 +105,28 @@ def _upload_and_extract_archive():
 def _update_py_deps():
     if not exists(REMOTE_VENV, use_sudo=True):
         sudo('virtualenv {}'.format(REMOTE_VENV))
+
     sudo('{}/bin/pip install -r {}/requirements.txt'.format(REMOTE_VENV, REMOTE_DEPLOY_DIR))
 
 
 def _install(pkg):
     puts('installing {}...'.format(pkg))
+
     with quiet():
         sudo('DEBIAN_FRONTEND=noninteractive apt-get install {} -y'.format(pkg))
+
     puts('{} installed'.format(pkg))
 
 
 def _system_update_upgrade():
     puts('updating and upgrading system. this may take a while...')
+
     with quiet():
         sudo("sh -c 'echo deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main > /etc/apt/sources.list.d/pgdg.list'")
         sudo('wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -')
         sudo('apt-get update')
         sudo('apt-get upgrade -y')
+
     puts('system updated and upgraded')
 
 
@@ -131,4 +136,5 @@ def _configure_firewall():
         sudo('ufw allow 22/tcp')
         sudo('ufw allow 443/tcp')
         sudo('ufw --force enable')
+        
     puts('firewall configured')

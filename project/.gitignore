@@ -94,5 +94,6 @@ ENV/
 # Misc
 .DS_Store
 
-# Project configuration
+# Project specific
 settings.cfg
+backups

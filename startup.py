@@ -18,8 +18,13 @@ def cli():
 
 
 @cli.command()
-@click.argument('project_name')
-def new(project_name):
+def new():
+    project_name = click.prompt('Project name')
+    db_user = click.prompt('Database username', project_name)
+    db_password = click.prompt('Database password', hide_input=True)
+    db_port = click.prompt('Database port', '5432')
+    db_name = click.prompt('Database name', project_name)
+
     # copy the project template dir
     project_template_dir = os.path.join(CWD, 'project')
     shutil.copytree(project_template_dir, project_name)
@@ -30,7 +35,9 @@ def new(project_name):
     os.rename(old_app_dir, app_dir)
 
     # write project settings
-    _write_project_settings(app_dir, project_name)
+    db_url = 'postgres://' + db_user + ':' + \
+        db_password + ':' + db_port + '/' + db_name
+    _write_project_settings(app_dir, db_url)
 
     # make etc directory
     etc_dir = os.path.join(project_name, 'etc')
@@ -49,12 +56,11 @@ def new(project_name):
     click.echo('created {}'.format(project_name))
 
 
-def _write_project_settings(app_dir, project_name):
+def _write_project_settings(app_dir, db_url):
     # generate the template
-    secure_random = b2a_hex(os.urandom(24))
+    secret_key = b2a_hex(os.urandom(24))
     template = jinja_env.get_template('settings.cfg.tpl')
-    file_contents = template.render(secure_random=secure_random,
-                                    project_name=project_name)
+    file_contents = template.render(secret_key=secret_key, db_url=db_url)
 
     # write the file
     settings_file = os.path.join(app_dir, 'settings.cfg')

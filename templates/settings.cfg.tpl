@@ -1,4 +1,4 @@
-SECRET_KEY = "{{ secure_random }}"
+SECRET_KEY = "{{ secret_key }}"
 
-SQLALCHEMY_DATABASE_URI = "postgres://{{ project_name }}"
+SQLALCHEMY_DATABASE_URI = "{{ db_url }}"
 SQLALCHEMY_TRACK_MODIFICATIONS = False
