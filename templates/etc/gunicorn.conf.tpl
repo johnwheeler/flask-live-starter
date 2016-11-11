@@ -1,9 +1,9 @@
 CONFIG = {
-    'working_dir': '/var/www/html/app',
+    'working_dir': '/var/www/html/{{ project_name }}',
     # Note - the same version of gunicorn should be installed in the virtualenv below
-    'python': '/var/www/html/app/venv/bin/python',
+    'python': '/var/www/html/{{ project_name }}/venv/bin/python',
     'args': (
         '--workers=3',
-        'app.views:app',
+        '{{ project_name }}.views:app',
     ),
 }

@@ -1,7 +1,7 @@
 server {
     listen 80;
     server_name 192.168.33.10;
-    root /var/www/html/app;
+    root /var/www/html/{{ project_name }};
 
     location / {
        include proxy_params;
