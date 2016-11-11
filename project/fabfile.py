@@ -1,4 +1,4 @@
-import os
+from os.path import basename, dirname, realpath
 
 from fabric.api import env, local, sudo, put
 from fabric.utils import puts
@@ -10,7 +10,7 @@ env.host_string = '192.168.33.10'
 env.key_filename = '.vagrant/machines/default/virtualbox/private_key'
 
 
-APP_NAME = os.path.basename(os.path.realpath(__file__))
+APP_NAME = basename(dirname(realpath(__file__)))
 
 REMOTE_DEPLOY_DIR = '/var/www/html/{}'.format(APP_NAME)
 REMOTE_VENV = '{}/venv'.format(REMOTE_DEPLOY_DIR)
