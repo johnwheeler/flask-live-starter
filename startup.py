@@ -20,10 +20,7 @@ def cli():
 @cli.command()
 def new():
     project_name = click.prompt('Project name')
-    db_user = click.prompt('Database username', project_name)
     db_password = click.prompt('Database password', hide_input=True)
-    db_port = click.prompt('Database port', '5432')
-    db_name = click.prompt('Database name', project_name)
 
     # copy the project template dir
     project_template_dir = os.path.join(CWD, 'project')
@@ -35,8 +32,7 @@ def new():
     os.rename(old_app_dir, app_dir)
 
     # write project settings
-    db_url = 'postgres://' + db_user + ':' + \
-        db_password + ':' + db_port + '/' + db_name
+    db_url = 'postgres://' + project_name + ':' + db_password + '/' + project_name
     _write_project_settings(app_dir, db_url)
 
     # make etc directory

@@ -10,62 +10,64 @@ env.host_string = '192.168.33.10'
 env.key_filename = '.vagrant/machines/default/virtualbox/private_key'
 
 
-APP_NAME = basename(dirname(realpath(__file__)))
+PROJECT_NAME = basename(dirname(realpath(__file__)))
 
-REMOTE_DEPLOY_DIR = '/var/www/html/{}'.format(APP_NAME)
+REMOTE_DEPLOY_DIR = '/var/www/html/{}'.format(PROJECT_NAME)
 REMOTE_VENV = '{}/venv'.format(REMOTE_DEPLOY_DIR)
-REMOTE_APP_DIR = '{}/{}'.format(REMOTE_DEPLOY_DIR, APP_NAME)
+REMOTE_APP_DIR = '{}/{}'.format(REMOTE_DEPLOY_DIR, PROJECT_NAME)
 
-LOCAL_ARCHIVE = './dist/{}.tar.gz'.format(APP_NAME)
-REMOTE_ARCHIVE = '/root/{}.tar.gz'.format(APP_NAME)
+LOCAL_ARCHIVE = './dist/{}.tar.gz'.format(PROJECT_NAME)
+REMOTE_ARCHIVE = '{}.tar.gz'.format(PROJECT_NAME)
 
-LOCAL_GUNICORN_CONF_FILE = './etc/{}.gunicorn.conf'.format(APP_NAME)
-REMOTE_GUNICORN_CONF_FILE = '/etc/gunicorn.d/{}.conf'.format(APP_NAME)
+LOCAL_GUNICORN_CONF_FILE = './etc/{}.gunicorn.conf'.format(PROJECT_NAME)
+REMOTE_GUNICORN_CONF_FILE = '/etc/gunicorn.d/{}.conf'.format(PROJECT_NAME)
 
-LOCAL_NGINX_CONF_FILE = './etc/{}.nginx.conf'.format(APP_NAME)
-REMOTE_NGINX_CONF_FILE = '/etc/nginx/conf.d/{}.conf'.format(APP_NAME)
-
-
-def dist():
-    outdir = 'dist/{}'.format(APP_NAME)
-    local('mkdir -p {}'.format(outdir))
-    local('cp requirements.txt {}'.format(outdir))
-    local('cp -R {} {}'.format(APP_NAME, outdir))
-    local('find {} -name "*.pyc" -type f -delete'.format(outdir))
-    local('tar czf dist/{}.tar.gz {}'.format(APP_NAME, outdir))
+LOCAL_NGINX_CONF_FILE = './etc/{}.nginx.conf'.format(PROJECT_NAME)
+REMOTE_NGINX_CONF_FILE = '/etc/nginx/conf.d/{}.conf'.format(PROJECT_NAME)
 
 
 def deploy():
     if not exists(REMOTE_DEPLOY_DIR, use_sudo=True):
         sudo('mkdir {}'.format(REMOTE_DEPLOY_DIR))
 
-    dist()
+    _dist()
     _upload_and_extract_archive()
     _update_py_deps()
     sudo('chown -R root:www-data {}'.format(REMOTE_DEPLOY_DIR))
     sudo('chmod -R og-rwx,g+rxs {}'.format(REMOTE_DEPLOY_DIR))
 
-    if not exists(REMOTE_NGINX_CONF_FILE):
-        put(LOCAL_NGINX_CONF_FILE, REMOTE_NGINX_CONF_FILE, use_sudo=True)
-        sudo('service nginx restart')
-
     if not exists(REMOTE_GUNICORN_CONF_FILE):
         put(LOCAL_GUNICORN_CONF_FILE, REMOTE_GUNICORN_CONF_FILE, use_sudo=True)
 
+    if not exists(REMOTE_NGINX_CONF_FILE):
+        put(LOCAL_NGINX_CONF_FILE, REMOTE_NGINX_CONF_FILE, use_sudo=True)
+
     sudo("service gunicorn restart")
-
-    clean()
-
-
-def clean():
+    sudo('service nginx restart')
     local('rm -rf ./dist')
 
 
-def clean_remote():
+def backup_remote_db():
+    timestamp = datetime.now().strftime('%Y-%m-%d_%H%M')
+    dump_file = '%s-prod-%s.dmp' % (PROJECT_NAME, timestamp)
+    pg_dump_cmd = 'pg_dump {} -U {} -h localhost -x -Fc -f {}' \
+        .format(PROJECT_NAME, PROJECT_NAME, dump_file)
+    sudo(pg_dump_cmd)
+    if not os.path.exists('backups'):
+        local('mkdir backups')
+    files.get(dump_file, 'backups')
+    sudo("rm %s" % dump_file)
+
+
+def uninstall_remote():
     sudo('rm -rf {}'.format(REMOTE_DEPLOY_DIR))
+    sudo('rm {}'.format(REMOTE_NGINX_CONF_FILE))
+    sudo('rm {}'.format(REMOTE_GUNICORN_CONF_FILE))
+    sudo("service gunicorn restart")
+    sudo('service nginx restart')
 
 
-def provision():
+def provision_system():
     _system_update_upgrade()
     # firewall
     _install('ufw')
@@ -89,6 +91,20 @@ def provision():
     _install('postgresql-client-9.6')
     _install('postgresql-server-dev-9.6')
     _install('postgresql-contrib-9.6')
+
+
+def provision_database():
+    sudo('createuser {} -P'.format(PROJECT_NAME), user='postgres')
+    sudo('createdb {} -O {}'.format(PROJECT_NAME, PROJECT_NAME), user='postgres')
+
+
+def _dist():
+    outdir = 'dist/{}'.format(PROJECT_NAME)
+    local('mkdir -p {}'.format(outdir))
+    local('cp requirements.txt {}'.format(outdir))
+    local('cp -R {} {}'.format(PROJECT_NAME, outdir))
+    local('find {} -name "*.pyc" -type f -delete'.format(outdir))
+    local('tar czf dist/{}.tar.gz {}'.format(PROJECT_NAME, outdir))
 
 
 def _upload_and_extract_archive():
@@ -136,5 +152,5 @@ def _configure_firewall():
         sudo('ufw allow 22/tcp')
         sudo('ufw allow 443/tcp')
         sudo('ufw --force enable')
-        
+
     puts('firewall configured')
