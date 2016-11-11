@@ -41,9 +41,9 @@ def deploy():
 
     if not exists(REMOTE_NGINX_CONF_FILE):
         put(LOCAL_NGINX_CONF_FILE, REMOTE_NGINX_CONF_FILE, use_sudo=True)
+        sudo('service nginx restart')
 
     sudo("service gunicorn restart")
-    sudo('service nginx restart')
     local('rm -rf ./dist')
 
 
@@ -80,17 +80,16 @@ def provision_system():
     _install('python-dev')
     _install('python-pip')
     _install('python-virtualenv')
-    # python nice-to-haves
-    _install('libffi-dev')
     # wsgi
     _install('gunicorn')
     # httpd
     _install('nginx')
     # postgres
-    _install('postgresql-9.6')
-    _install('postgresql-client-9.6')
-    _install('postgresql-server-dev-9.6')
-    _install('postgresql-contrib-9.6')
+    pg_version = '9.6'
+    _install('postgresql-{}'.format(pg_version))
+    _install('postgresql-client-{}'.format(pg_version))
+    _install('postgresql-server-dev-{}'.format(pg_version))
+    _install('postgresql-contrib-{}'.format(pg_version))
 
 
 def provision_database():

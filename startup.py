@@ -32,7 +32,8 @@ def new():
     os.rename(old_app_dir, app_dir)
 
     # write project settings
-    db_url = 'postgres://' + project_name + ':' + db_password + '/' + project_name
+    db_url = 'postgres://' + project_name + ':' + \
+        db_password + '@localhost/' + project_name
     _write_project_settings(app_dir, db_url)
 
     # make etc directory
