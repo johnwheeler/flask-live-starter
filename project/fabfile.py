@@ -1,8 +1,9 @@
-from os.path import basename, dirname, realpath
+import os
+from datetime import datetime
 
 from fabric.api import env, local, sudo, put
 from fabric.utils import puts
-from fabric.contrib.files import exists
+from fabric.contrib.files import exists, get
 from fabric.context_managers import quiet
 
 env.user = 'vagrant'
@@ -10,7 +11,7 @@ env.host_string = '192.168.33.10'
 env.key_filename = '.vagrant/machines/default/virtualbox/private_key'
 
 
-PROJECT_NAME = basename(dirname(realpath(__file__)))
+PROJECT_NAME = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
 
 REMOTE_DEPLOY_DIR = '/var/www/html/{}'.format(PROJECT_NAME)
 REMOTE_VENV = '{}/venv'.format(REMOTE_DEPLOY_DIR)
@@ -49,13 +50,13 @@ def deploy():
 
 def backup_remote_db():
     timestamp = datetime.now().strftime('%Y-%m-%d_%H%M')
-    dump_file = '%s-prod-%s.dmp' % (PROJECT_NAME, timestamp)
+    dump_file = '%s-remote-%s.dmp' % (PROJECT_NAME, timestamp)
     pg_dump_cmd = 'pg_dump {} -U {} -h localhost -x -Fc -f {}' \
         .format(PROJECT_NAME, PROJECT_NAME, dump_file)
     sudo(pg_dump_cmd)
     if not os.path.exists('backups'):
         local('mkdir backups')
-    files.get(dump_file, 'backups')
+    get(dump_file, 'backups')
     sudo("rm %s" % dump_file)
 
 
