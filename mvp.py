@@ -21,6 +21,11 @@ def cli():
 def new():
     project_name = click.prompt('Project name')
     db_password = click.prompt('Database password', hide_input=True)
+    db_confirm = click.prompt('Confirm database password', hide_input=True)
+
+    if db_password != db_confirm:
+        click.echo("Passwords don't match")
+        return
 
     # copy the project template dir
     project_template_dir = os.path.join(CWD, 'project')
@@ -47,10 +52,14 @@ def new():
     _write_gunicorn_conf(project_name)
 
     # show command feedback
+    click.echo()
+
     for root, dirs, files in os.walk(project_name):
         for f in files:
             print root + os.sep + f
-    click.echo('created {}'.format(project_name))
+
+    click.echo()
+    click.echo("Created {}".format(project_name))
 
 
 def _write_project_settings(app_dir, db_url):
