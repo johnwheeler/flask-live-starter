@@ -5,9 +5,12 @@ from . import app, db
 
 @app.route('/')
 def index():
-    app.logger.info('test logging message')
-    app.logger.info('this is a test')
-    app.logger.error('this is a severe test')
+    app.logger.debug('DEBUG log message')
+    app.logger.info('INFO log message')
+    app.logger.warn('WARN log message')
+    app.logger.error('ERROR log message')
+
+    # Database connection test
     result = None
     try:
         result = db.engine.execute('select 1')

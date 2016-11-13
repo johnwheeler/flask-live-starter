@@ -8,6 +8,3 @@ app = Flask(__name__)
 app.config.from_pyfile('settings.cfg')
 
 db = SQLAlchemy(app)
-
-# logging
-app.logger.setLevel(logging.DEBUG)

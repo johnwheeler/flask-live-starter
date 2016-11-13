@@ -8,13 +8,19 @@ from jinja2 import Environment, FileSystemLoader
 from .constants import *
 
 
-__all__ = ['deploy', 'undeploy', 'backup', 'initdb', 'tail']
+__all__ = ['deploy', 'undeploy', 'backup', 'initdb', 'tail', 'reset_log']
 
 
 @task
 def tail(grep=""):
-    sudo("tail -F -n +1 /var/log/gunicorn/{}.conf.log | grep --line-buffered -i '{}'"
-         .format(PROJECT_NAME, grep))
+    sudo("tail -F -n +1 {} | grep --line-buffered -i '{}'"
+         .format(REMOTE_LOG_FILE, grep))
+
+
+@task
+def reset_log():
+    sudo("rm -f {}".format(REMOTE_LOG_FILE))
+    sudo("service gunicorn reload")
 
 
 @task
