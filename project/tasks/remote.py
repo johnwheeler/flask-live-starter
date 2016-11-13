@@ -6,7 +6,8 @@ from fabric.contrib import files
 
 from .constants import *
 
-__all__ = ['deploy', 'undeploy', 'backup']
+
+__all__ = ['deploy', 'undeploy', 'backup', 'initdb']
 
 
 @task
@@ -17,6 +18,7 @@ def deploy():
     _dist()
     _upload_and_extract_archive()
     _update_py_deps()
+
     sudo('chown -R root:www-data {}'.format(REMOTE_DEPLOY_DIR))
     sudo('chmod -R og-rwx,g+rxs {}'.format(REMOTE_DEPLOY_DIR))
 
@@ -41,15 +43,21 @@ def undeploy():
 
 
 @task
+def initdb():
+    sudo('createuser {} -P'.format(PROJECT_NAME), user='postgres')
+    sudo('createdb {} -O {}'.format(PROJECT_NAME, PROJECT_NAME), user='postgres')
+
+
+@task
 def backup():
     timestamp = datetime.now().strftime('%Y-%m-%d_%H%M')
     dump_file = '%s-remote-%s.dmp' % (PROJECT_NAME, timestamp)
     pg_dump_cmd = 'pg_dump {} -U {} -h localhost -x -Fc -f {}' \
         .format(PROJECT_NAME, PROJECT_NAME, dump_file)
     sudo(pg_dump_cmd)
-    if not os.path.exists('backups'):
-        local('mkdir backups')
-    files.get(dump_file, 'backups')
+    if not os.path.exists(LOCAL_BACKUPS_DIR):
+        local('mkdir {}'.format(LOCAL_BACKUPS_DIR))
+    files.get(dump_file, LOCAL_BACKUPS_DIR)
     sudo("rm %s" % dump_file)
 
 

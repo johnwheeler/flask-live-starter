@@ -2,7 +2,8 @@ from fabric.api import task, sudo
 
 from .constants import *
 
-__all__ = ['system', 'database']
+
+__all__ = ['system']
 
 
 @task
@@ -31,21 +32,15 @@ def system():
     _install('postgresql-contrib-{}'.format(pg_version))
 
 
-@task
-def database():
-    sudo('createuser {} -P'.format(PROJECT_NAME), user='postgres')
-    sudo('createdb {} -O {}'.format(PROJECT_NAME, PROJECT_NAME), user='postgres')
-
-
-def _install(pkg):
-    sudo('DEBIAN_FRONTEND=noninteractive apt-get install {} -y'.format(pkg))
-
-
 def _system_update_upgrade():
     sudo("sh -c 'echo deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main > /etc/apt/sources.list.d/pgdg.list'")
     sudo('wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -')
     sudo('apt-get update')
     sudo('apt-get upgrade -y')
+
+
+def _install(pkg):
+    sudo('DEBIAN_FRONTEND=noninteractive apt-get install {} -y'.format(pkg))
 
 
 def _configure_firewall():

@@ -14,3 +14,5 @@ REMOTE_GUNICORN_CONF_FILE='/etc/gunicorn.d/{}.conf'.format(PROJECT_NAME)
 
 LOCAL_NGINX_CONF_FILE='./etc/{}.nginx.conf'.format(PROJECT_NAME)
 REMOTE_NGINX_CONF_FILE='/etc/nginx/conf.d/{}.conf'.format(PROJECT_NAME)
+
+LOCAL_BACKUPS_DIR='./backups'
