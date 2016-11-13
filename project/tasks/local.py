@@ -40,7 +40,6 @@ def _db_kill_sessions():
         WHERE pg_stat_activity.datname = '{}'
         AND pid <> pg_backend_pid();
         """.format(PROJECT_NAME)
-
     kill_sessions_cmd = 'psql {} -c "{}"' \
         .format(PROJECT_NAME, kill_sessions_sql)
     local(kill_sessions_cmd)
