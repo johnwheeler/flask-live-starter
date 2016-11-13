@@ -5,6 +5,9 @@ from . import app, db
 
 @app.route('/')
 def index():
+    app.logger.info('test logging message')
+    app.logger.info('this is a test')
+    app.logger.error('this is a severe test')
     result = None
     try:
         result = db.engine.execute('select 1')

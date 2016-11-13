@@ -8,7 +8,13 @@ from jinja2 import Environment, FileSystemLoader
 from .constants import *
 
 
-__all__ = ['deploy', 'undeploy', 'backup', 'initdb']
+__all__ = ['deploy', 'undeploy', 'backup', 'initdb', 'tail']
+
+
+@task
+def tail(grep=""):
+    sudo("tail -F -n +1 /var/log/gunicorn/{}.conf.log | grep --line-buffered -i '{}'"
+         .format(PROJECT_NAME, grep))
 
 
 @task
