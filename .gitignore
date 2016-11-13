@@ -94,3 +94,7 @@ ENV/
 # Misc
 .DS_Store
 temp
+
+# Project
+backups
+settings.cfg

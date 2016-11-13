@@ -1,0 +1,5 @@
+# Generate a secure key at https://www.grc.com/passwords.htm
+SECRET_KEY = ""
+
+SQLALCHEMY_DATABASE_URI = "postgres://username:password@127.0.0.1:5432/database"
+SQLALCHEMY_TRACK_MODIFICATIONS = False

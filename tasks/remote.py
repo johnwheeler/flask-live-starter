@@ -3,6 +3,7 @@ from datetime import datetime
 
 from fabric.api import task, local, sudo, put
 from fabric.contrib import files
+from jinja2 import Environment, FileSystemLoader
 
 from .constants import *
 
@@ -23,14 +24,24 @@ def deploy():
     sudo('chmod -R og-rwx,g+rxs {}'.format(REMOTE_DEPLOY_DIR))
 
     if not files.exists(REMOTE_GUNICORN_CONF_FILE):
-        put(LOCAL_GUNICORN_CONF_FILE, REMOTE_GUNICORN_CONF_FILE, use_sudo=True)
+        files.upload_template(LOCAL_GUNICORN_CONF_FILE,
+                              REMOTE_GUNICORN_CONF_FILE,
+                              context={'project_name': PROJECT_NAME},
+                              template_dir=LOCAL_ETC_DIR,
+                              use_jinja=True,
+                              use_sudo=True)
 
     if not files.exists(REMOTE_NGINX_CONF_FILE):
-        put(LOCAL_NGINX_CONF_FILE, REMOTE_NGINX_CONF_FILE, use_sudo=True)
+        files.upload_template(LOCAL_NGINX_CONF_FILE,
+                              REMOTE_NGINX_CONF_FILE,
+                              context={'project_name': PROJECT_NAME},
+                              template_dir=LOCAL_ETC_DIR,
+                              use_jinja=True,
+                              use_sudo=True)
         sudo('service nginx restart')
 
     sudo("service gunicorn restart")
-    local('rm -rf ./dist')
+    local('rm -rf dist')
 
 
 @task
