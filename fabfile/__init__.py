@@ -1,6 +1,6 @@
 from fabric.api import env
 
-from tasks import provision, remote, local
+from . import provision, remote, local
 
 env.user = 'vagrant'
 env.host_string = '192.168.33.10'
