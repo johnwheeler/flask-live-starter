@@ -17,4 +17,5 @@ LOCAL_BACKUPS_DIR = 'backups'
 REMOTE_DEPLOY_DIR = '/var/www/html/{}'.format(PROJECT_NAME)
 REMOTE_VENV = '{}/venv'.format(REMOTE_DEPLOY_DIR)
 REMOTE_APP_DIR = '{}/{}'.format(REMOTE_DEPLOY_DIR, PROJECT_NAME)
-REMOTE_LOG_FILE = '/var/log/gunicorn/{}.log'.format(PROJECT_NAME)
+REMOTE_LOG_DIR = '/var/log/flask'
+REMOTE_LOG_FILE = '{}/{}.log'.format(REMOTE_LOG_DIR, PROJECT_NAME)

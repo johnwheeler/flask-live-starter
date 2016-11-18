@@ -25,35 +25,12 @@ def reset_log():
 
 @task
 def deploy():
-    if not files.exists(REMOTE_DEPLOY_DIR, use_sudo=True):
-        sudo('mkdir {}'.format(REMOTE_DEPLOY_DIR))
-
-    _dist()
-    _upload_and_extract_archive()
+    _upload_archive()
+    _extract_archive()
     _update_py_deps()
-
-    sudo('chown -R root:www-data {}'.format(REMOTE_DEPLOY_DIR))
-    sudo('chmod -R og-rwx,g+rxs {}'.format(REMOTE_DEPLOY_DIR))
-
-    if not files.exists(REMOTE_GUNICORN_CONF_FILE):
-        files.upload_template(LOCAL_GUNICORN_CONF_FILE,
-                              REMOTE_GUNICORN_CONF_FILE,
-                              context={'project_name': PROJECT_NAME},
-                              template_dir=LOCAL_ETC_DIR,
-                              use_jinja=True,
-                              use_sudo=True)
-
-    if not files.exists(REMOTE_NGINX_CONF_FILE):
-        files.upload_template(LOCAL_NGINX_CONF_FILE,
-                              REMOTE_NGINX_CONF_FILE,
-                              context={'project_name': PROJECT_NAME},
-                              template_dir=LOCAL_ETC_DIR,
-                              use_jinja=True,
-                              use_sudo=True)
-        sudo('service nginx restart')
-
-    sudo("service gunicorn restart")
-    local('rm -rf dist')
+    _ensure_log_dir()
+    _configure_gunicorn()
+    _configure_nginx()
 
 
 @task
@@ -84,20 +61,22 @@ def backup():
     sudo("rm %s" % dump_file)
 
 
-def _dist():
+def _upload_archive():
     outdir = 'dist/{}'.format(PROJECT_NAME)
     local('mkdir -p {}'.format(outdir))
     local('cp requirements.txt {}'.format(outdir))
     local('cp -R {} {}'.format(PROJECT_NAME, outdir))
     local('find {} -name "*.pyc" -type f -delete'.format(outdir))
-    local('tar czf dist/{}.tar.gz {}'.format(PROJECT_NAME, outdir))
-
-
-def _upload_and_extract_archive():
+    local('tar czf {} {}'.format(LOCAL_ARCHIVE, outdir))
     put(LOCAL_ARCHIVE, REMOTE_ARCHIVE, use_sudo=True)
+    local('rm -rf dist')
 
+
+def _extract_archive():
     if not files.exists(REMOTE_DEPLOY_DIR, use_sudo=True):
         sudo('mkdir {}'.format(REMOTE_DEPLOY_DIR))
+        sudo('chown -R www-data:www-data {}'.format(REMOTE_DEPLOY_DIR))
+        sudo('chmod -R og-rwx,g+rxs {}'.format(REMOTE_DEPLOY_DIR))
 
     sudo('rm -rf {}'.format(REMOTE_APP_DIR))
     sudo('tar xmzf {} -C {} --strip-components=2'.format(REMOTE_ARCHIVE, REMOTE_DEPLOY_DIR))
@@ -109,3 +88,32 @@ def _update_py_deps():
         sudo('virtualenv {}'.format(REMOTE_VENV))
 
     sudo('{}/bin/pip install -r {}/requirements.txt'.format(REMOTE_VENV, REMOTE_DEPLOY_DIR))
+
+
+def _ensure_log_dir():
+    if not files.exists(REMOTE_LOG_DIR):
+        sudo('mkdir {}'.format(REMOTE_LOG_DIR))
+        sudo('chown -R www-data:www-data {}'.format(REMOTE_LOG_DIR))
+        sudo('chmod -R og-rwx,g+rxs {}'.format(REMOTE_LOG_DIR))
+
+
+def _configure_gunicorn():
+    if not files.exists(REMOTE_GUNICORN_CONF_FILE):
+        files.upload_template(LOCAL_GUNICORN_CONF_FILE,
+                              REMOTE_GUNICORN_CONF_FILE,
+                              context={'project_name': PROJECT_NAME},
+                              template_dir=LOCAL_ETC_DIR,
+                              use_jinja=True,
+                              use_sudo=True)
+    sudo("service gunicorn restart")
+
+
+def _configure_nginx():
+    if not files.exists(REMOTE_NGINX_CONF_FILE):
+        files.upload_template(LOCAL_NGINX_CONF_FILE,
+                              REMOTE_NGINX_CONF_FILE,
+                              context={'project_name': PROJECT_NAME},
+                              template_dir=LOCAL_ETC_DIR,
+                              use_jinja=True,
+                              use_sudo=True)
+    sudo('service nginx reload')
