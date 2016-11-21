@@ -98,3 +98,4 @@ temp
 # Project
 backups
 settings.cfg
+fabfile/settings.py

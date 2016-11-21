@@ -9,8 +9,8 @@ __all__ = ['initdb', 'restore_remote']
 
 @task
 def initdb():
-    local('createuser {} -P'.format(PROJECT_NAME))
-    local('createdb {} -O {}'.format(PROJECT_NAME, PROJECT_NAME))
+    local('createuser {} -P'.format(APP_NAME))
+    local('createdb {} -O {}'.format(APP_NAME, APP_NAME))
 
 
 @task
@@ -22,13 +22,13 @@ def restore_remote():
     _db_kill_sessions()
 
     # drop/create database
-    local("dropdb {}".format(PROJECT_NAME))
-    local("createdb {} -O {}".format(PROJECT_NAME, PROJECT_NAME))
+    local("dropdb {}".format(APP_NAME))
+    local("createdb {} -O {}".format(APP_NAME, APP_NAME))
 
     # restore latest remote dump
     last_backup = _sorted_ls(LOCAL_BACKUPS_DIR)[-1]
     local("pg_restore backups/{} -d {} --no-owner -x -n public --role={}"
-          .format(last_backup, PROJECT_NAME, PROJECT_NAME))
+          .format(last_backup, APP_NAME, APP_NAME))
 
     _db_size_report()
 
@@ -39,16 +39,16 @@ def _db_kill_sessions():
         FROM pg_stat_activity
         WHERE pg_stat_activity.datname = '{}'
         AND pid <> pg_backend_pid();
-        """.format(PROJECT_NAME)
+        """.format(APP_NAME)
     kill_sessions_cmd = 'psql {} -c "{}"' \
-        .format(PROJECT_NAME, kill_sessions_sql)
+        .format(APP_NAME, kill_sessions_sql)
     local(kill_sessions_cmd)
 
 
 def _db_size_report():
     db_size_sql = "SELECT pg_size_pretty(pg_database_size('{}'))" \
-        .format(PROJECT_NAME)
-    db_size_cmd = 'psql {} -c "{}"'.format(PROJECT_NAME, db_size_sql)
+        .format(APP_NAME)
+    db_size_cmd = 'psql {} -c "{}"'.format(APP_NAME, db_size_sql)
     local(db_size_cmd)
 
 
