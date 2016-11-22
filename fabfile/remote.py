@@ -8,7 +8,7 @@ from jinja2 import Environment, FileSystemLoader
 from .constants import *
 
 
-__all__ = ['deploy', 'undeploy', 'backup', 'initdb', 'tail', 'reset_log']
+__all__ = ['deploy', 'undeploy', 'backup', 'tail', 'reset_log']
 
 
 @task
@@ -44,12 +44,6 @@ def undeploy():
     if files.exists(REMOTE_NGINX_CONF_FILE):
         sudo('rm {}'.format(REMOTE_NGINX_CONF_FILE))
         sudo('service nginx restart')
-
-
-@task
-def initdb():
-    sudo('createuser {} -P'.format(APP_NAME), user='postgres')
-    sudo('createdb {} -O {}'.format(APP_NAME, APP_NAME), user='postgres')
 
 
 @task
@@ -102,24 +96,26 @@ def _ensure_log_dir():
 
 
 def _configure_gunicorn():
-    files.upload_template(LOCAL_GUNICORN_CONF_FILE,
-                          REMOTE_GUNICORN_CONF_FILE,
-                          context={'app_name': APP_NAME},
-                          template_dir=LOCAL_ETC_DIR,
-                          use_jinja=True,
-                          use_sudo=True)
+    if not files.exists(REMOTE_GUNICORN_CONF_FILE):
+        files.upload_template(LOCAL_GUNICORN_CONF_FILE,
+                              REMOTE_GUNICORN_CONF_FILE,
+                              context={'app_name': APP_NAME},
+                              template_dir=LOCAL_ETC_DIR,
+                              use_jinja=True,
+                              use_sudo=True)
     sudo("service gunicorn restart")
 
 
 def _configure_nginx():
-    files.upload_template(LOCAL_NGINX_CONF_FILE,
-                          REMOTE_NGINX_CONF_FILE,
-                          context={
-                              'app_name': APP_NAME,
-                              'domain': DOMAIN,
-                              'subdomain': SUBDOMAIN
-                          },
-                          template_dir=LOCAL_ETC_DIR,
-                          use_jinja=True,
-                          use_sudo=True)
+    if not files.exists(REMOTE_NGINX_CONF_FILE):
+        files.upload_template(LOCAL_NGINX_CONF_FILE,
+                              REMOTE_NGINX_CONF_FILE,
+                              context={
+                                  'app_name': APP_NAME,
+                                  'domain': DOMAIN,
+                                  'subdomain': SUBDOMAIN
+                              },
+                              template_dir=LOCAL_ETC_DIR,
+                              use_jinja=True,
+                              use_sudo=True)
     sudo('service nginx reload')

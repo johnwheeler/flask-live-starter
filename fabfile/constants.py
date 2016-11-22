@@ -5,6 +5,7 @@ from fabric.api import env
 APP_NAME = env._app_name
 DOMAIN = env._domain
 SUBDOMAIN = env._subdomain
+EMAIL = env._email
 
 LOCAL_ARCHIVE = 'dist/{}.tar.gz'.format(APP_NAME)
 REMOTE_ARCHIVE = '{}.tar.gz'.format(APP_NAME)

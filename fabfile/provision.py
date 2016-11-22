@@ -3,7 +3,7 @@ from fabric.api import task, sudo
 from .constants import *
 
 
-__all__ = ['system']
+__all__ = ['system', 'certificate', 'database']
 
 
 @task
@@ -30,11 +30,29 @@ def system():
     _install('postgresql-client-{}'.format(pg_version))
     _install('postgresql-server-dev-{}'.format(pg_version))
     _install('postgresql-contrib-{}'.format(pg_version))
+    # certbot (letsencrypt)
+    _install('apt-get install python-certbot-nginx -t jessie-backports')
+
+
+@task
+def certificate():
+    sudo('certbot --nginx --non-interactive --agree-tos --redirect --domain {} --domain {}.{} --email {}'.format(DOMAIN, SUBDOMAIN, DOMAIN, EMAIL))
+
+
+@task
+def database():
+    sudo('createuser {} -P'.format(APP_NAME), user='postgres')
+    sudo('createdb {} -O {}'.format(APP_NAME, APP_NAME), user='postgres')
 
 
 def _system_update_upgrade():
+    # backports
+    sudo("sh -c 'echo deb http://ftp.us.debian.org/debian/ jessie-backports main >> /etc/apt/sources.list'")
+
+    # postgresql
     sudo("sh -c 'echo deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main > /etc/apt/sources.list.d/pgdg.list'")
     sudo('wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -')
+
     sudo('apt-get update')
     sudo('apt-get upgrade -y')
 
