@@ -31,7 +31,7 @@ def system():
     _install('postgresql-server-dev-{}'.format(pg_version))
     _install('postgresql-contrib-{}'.format(pg_version))
     # certbot (letsencrypt)
-    _install('apt-get install python-certbot-nginx -t jessie-backports')
+    _install('python-certbot-nginx -t jessie-backports')
 
 
 @task
