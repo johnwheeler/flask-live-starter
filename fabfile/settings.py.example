@@ -1,0 +1,20 @@
+from fabric.api import env
+
+# -- ssh settings --
+
+# http://docs.fabfile.org/en/latest/usage/env.html
+
+# env.user = 'vagrant'
+# env.host_string = '192.168.33.10'
+# env.key_filename = '.vagrant/machines/default/virtualbox/private_key'
+
+env.user = 'root'
+env.host_string = 'example.com'
+env.key_filename = '/Users/jwheeler/.ssh/id_rsa'
+
+# -- application-specific settings --
+
+env._app_name = 'app'
+env._domain = 'example.com'
+env._subdomain = 'www'
+env._email = 'nobody@example.com'
