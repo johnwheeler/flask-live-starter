@@ -10,11 +10,11 @@ from fabric.api import env
 
 env.user = 'root'
 env.host_string = 'example.com'
-env.key_filename = '/Users/jwheeler/.ssh/id_rsa'
+env.key_filename = '/Users/janedoe/.ssh/id_rsa'
 
 # -- application-specific settings --
 
 env._app_name = 'app'
 env._domain = 'example.com'
 env._subdomain = 'www'
-env._email = 'nobody@example.com'
+env._email = 'janedoe@example.com'
