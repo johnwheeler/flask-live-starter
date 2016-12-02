@@ -1,4 +1,8 @@
-# Introducing Flask-Live-Starter
+![Do it live!](http://i.imgur.com/ZtcuB98.jpg)
+
+
+
+# Welcome to Flask-Live-Starter
 
 **This is an alpha release that supports Unix-based development environments only.**
 
