@@ -2,6 +2,8 @@
 
 # Welcome to Flask-Live-Starter
 
+## Introduction
+
 Go from 0 to 100 MPH with the infrastructure behind [OldGeekJobs.com](https://oldgeekjobs.com).
 
 [![bird] Follow @_johnwheeler for updates](https://twitter.com/_johnwheeler)
@@ -24,18 +26,18 @@ In addition to provisioning your application's environment, Flask-Live-Starter m
 * Backup your production database
 * Tail your production logs
 
-# Quickstart
+## Quickstart
 
 Let's setup a new application named myapp.
 
-## Download flask-live-starter
+### Download flask-live-starter
 
 ```
 git clone https://github.com/johnwheeler/flask-live-starter myapp
 rm -rf myapp/.git
 ```
 
-## Prepare your local development environment
+### Prepare your local development environment
 
 ```
 cd myapp
@@ -44,7 +46,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Configure your application for development
+### Configure your application for development
 
 ```
 cp fabfile/settings.py.example fabfile/settings.py
@@ -60,7 +62,7 @@ export FLASK_DEBUG=1
 flask run
 ```
 
-## Prepare the remote server
+### Prepare the remote server
 
 ```
 fab provision.system
