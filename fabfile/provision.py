@@ -3,7 +3,7 @@ from fabric.api import task, sudo
 from .constants import *
 
 
-__all__ = ['system', 'certificate', 'database']
+__all__ = ['system', 'certificate']
 
 
 @task
@@ -37,12 +37,6 @@ def system():
 @task
 def certificate():
     sudo('certbot --nginx --non-interactive --agree-tos --redirect --domain {} --domain {}.{} --email {}'.format(DOMAIN, SUBDOMAIN, DOMAIN, EMAIL))
-
-
-@task
-def database():
-    sudo('createuser {} -P'.format(APP_NAME), user='postgres')
-    sudo('createdb {} -O {}'.format(APP_NAME, APP_NAME), user='postgres')
 
 
 def _system_update_upgrade():
