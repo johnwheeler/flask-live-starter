@@ -1,5 +1,8 @@
 ![Do it live!](http://i.imgur.com/MgdS9jJ.jpg)
 
+[![bird] Follow @_johnwheeler for updates](https://twitter.com/_johnwheeler)
+[bird]: http://i.imgur.com/UUARvmc.png
+
 # Welcome to Flask-Live-Starter
 
 ## Introduction
@@ -7,9 +10,6 @@
 ***Note:*** *This is an alpha release that supports Unix-based development environments only.*
 
 Go from 0 to 100 MPH with the infrastructure behind [OldGeekJobs.com](https://oldgeekjobs.com).
-
-[![bird] Follow @_johnwheeler for updates](https://twitter.com/_johnwheeler)
-[bird]: http://i.imgur.com/UUARvmc.png
 
 Flask-Live-Starter is a boilerplate Flask application with Fabric tasks that automate the provisioning of:
 
