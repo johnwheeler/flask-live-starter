@@ -2,6 +2,11 @@
 
 # Welcome to Flask-Live-Starter
 
+Go from 0 to 100 MPH with the infrastructure behind [OldGeekJobs.com](https://oldgeekjobs.com).
+
+[![bird] Follow @_johnwheeler for updates](https://twitter.com/_johnwheeler)
+[bird]: http://i.imgur.com/UUARvmc.png
+
 **This is an alpha release that supports Unix-based development environments only.**
 
 Flask-Live-Starter is a boilerplate Flask application with Fabric tasks that automate the provisioning of:
