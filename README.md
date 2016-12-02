@@ -1,6 +1,3 @@
-![Do it live!](http://i.imgur.com/ZtcuB98.jpg)
-
-
 
 # Welcome to Flask-Live-Starter
 
