@@ -42,9 +42,12 @@ pip install -r requirements.txt
 ```
 cp fabfile/settings.py.example fabfile/settings.py
 nano fabfile/settings.py
+
 cp app/settings.cfg.example app/settings.cfg
 nano app/settings.cfg
+
 fab local.initdb
+
 export FLASK_APP=app/views.py
 export FLASK_DEBUG=1
 flask run
