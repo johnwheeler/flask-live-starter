@@ -3,25 +3,6 @@
 [![bird] Follow @_johnwheeler for updates](https://twitter.com/_johnwheeler)
 [bird]: http://i.imgur.com/UUARvmc.png
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [Welcome to Flask-Live-Starter](#welcome-to-flask-live-starter)
-  - [Quickstart](#quickstart)
-      - [Download flask-live-starter](#download-flask-live-starter)
-      - [Prepare your local development environment](#prepare-your-local-development-environment)
-      - [Configure your application for development](#configure-your-application-for-development)
-      - [Prepare the remote server](#prepare-the-remote-server)
-  - [Fabric Tasks](#fabric-tasks)
-      - [`install`](#install)
-      - [`provision`](#provision)
-      - [`remote`](#remote)
-      - [`local`](#local)
-  - [Technology selection](#technology-selection)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # Welcome to Flask-Live-Starter
 
 ***Note:*** *This is an alpha release that supports Unix-based development environments only.*
@@ -43,6 +24,24 @@ In addition to provisioning your application's environment, Flask-Live-Starter m
 * Deploy your Flask application
 * Backup your production database
 * Tail your production logs
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Quickstart](#quickstart)
+    - [Download flask-live-starter](#download-flask-live-starter)
+    - [Prepare your local development environment](#prepare-your-local-development-environment)
+    - [Configure your application for development](#configure-your-application-for-development)
+    - [Prepare the remote server](#prepare-the-remote-server)
+- [Fabric Tasks](#fabric-tasks)
+    - [`install`](#install)
+    - [`provision`](#provision)
+    - [`remote`](#remote)
+    - [`local`](#local)
+- [Technology selection](#technology-selection)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Quickstart
 
