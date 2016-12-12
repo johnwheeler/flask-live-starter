@@ -99,6 +99,6 @@ Placeholder
 
 Placeholder
 
-## Technology choices
+## Technology selection
 
-To be continued...
+Placeholder
