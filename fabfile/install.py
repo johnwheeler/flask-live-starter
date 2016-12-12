@@ -11,21 +11,29 @@ __all__ = ['system', 'certificate', 'postgres', 'redis']
 @task
 def system():
     _system_update_upgrade()
+
     # firewall
     _install('ufw')
     _configure_firewall()
+
     # unattended upgrades
     _install('needrestart')
     _install('unattended-upgrades')
     sudo('cp /usr/share/unattended-upgrades/20auto-upgrades /etc/apt/apt.conf.d/20auto-upgrades')
+
     # python related
     _install('python-dev')
     _install('python-pip')
     _install('python-virtualenv')
+
     # wsgi
     _install('gunicorn')
+
     # httpd
     _install('nginx')
+
+    # letsencrypt
+    _install('python-certbot-nginx -t jessie-backports')
 
 
 @task
@@ -83,7 +91,6 @@ def redis():
 
 @task
 def certificate():
-    _install('python-certbot-nginx -t jessie-backports')
     sudo('certbot --nginx --non-interactive --agree-tos --redirect --domain {} --domain {}.{} --email {}'
          .format(DOMAIN, SUBDOMAIN, DOMAIN, EMAIL))
 
@@ -91,7 +98,9 @@ def certificate():
 def _system_update_upgrade():
     # backports
     sudo("sh -c 'echo deb http://ftp.us.debian.org/debian/ jessie-backports main >> /etc/apt/sources.list'")
+    # update
     sudo('apt-get update')
+    # upgrade
     sudo('apt-get upgrade -y')
 
 
@@ -100,7 +109,11 @@ def _install(pkg):
 
 
 def _configure_firewall():
+    # allow http
     sudo('ufw allow 80/tcp')
-    sudo('ufw allow 22/tcp')
+    # allow https
     sudo('ufw allow 443/tcp')
+    # allow ssh
+    sudo('ufw allow 22/tcp')
+    # enable firewall
     sudo('ufw --force enable')
