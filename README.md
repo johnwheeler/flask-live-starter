@@ -64,6 +64,8 @@ flask run
 
 ```
 fab install.system
+fab install.postgres
+fab install.redis
 fab remote.initdb
 fab remote.deploy
 fab install.certificate
