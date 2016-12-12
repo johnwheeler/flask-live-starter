@@ -16,7 +16,7 @@ Flask-Live-Starter is a boilerplate Flask application with Fabric tasks that aut
 * An HTTPD server (Nginx)
 * An SSL certificate (LetsEncrypt)
 * A database server (Postgresql)
-* A memory cache (redis)
+* An in-memory cache (Redis)
 * A firewall (UFW)
 
 In addition to provisioning your application's environment, Flask-Live-Starter makes it a snap to:
@@ -98,3 +98,7 @@ Placeholder
 #### `local`
 
 Placeholder
+
+## Technology choices
+
+To be continued...
