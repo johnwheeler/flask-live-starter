@@ -17,10 +17,9 @@ def system():
     _install('unattended-upgrades')
     sudo('cp /usr/share/unattended-upgrades/20auto-upgrades /etc/apt/apt.conf.d/20auto-upgrades')
 
-    # firewall
-    _install('ufw')
-
     # python related
+    _install('libffi-dev')
+    _install('libssl-dev')
     _install('python-dev')
     _install('python-pip')
     _install('python-virtualenv')
@@ -30,6 +29,9 @@ def system():
 
     # httpd
     _install('nginx')
+
+    # firewall
+    _install('ufw')
 
     # letsencrypt
     _install('python-certbot-nginx -t jessie-backports')
