@@ -72,3 +72,29 @@ fab remote.deploy
 
 fab provision.certificate
 ```
+
+## Fabric Tasks
+
+The fabric tasks are broken into four namespaces that each focus on a separate
+deployment concern.
+
+* `install` is for installing system components like including the stack for serving Flask apps, Postgresql, and Redis
+* `provision` is for provisioning a certificate, a firewall, and a database
+* `remote` includes tasks to deploy your application, backup your database, and tail and grep logs
+* `local` has one task that restores the latest backup to your local development database so you can work off your production dataset.
+
+#### `install`
+
+Placeholder
+
+#### `provision`
+
+Placeholder
+
+#### `remote`
+
+Placeholder
+
+#### `local`
+
+Placeholder
