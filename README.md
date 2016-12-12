@@ -12,12 +12,12 @@ Go from 0 to 100 MPH with the infrastructure behind [OldGeekJobs.com](https://ol
 Flask-Live-Starter is a boilerplate Flask application with Fabric tasks that automate the provisioning of:
 
 * A Linux box (Debian)
-* A firewall (UFW)
-* An SSL certificate (LetsEncrypt)
-* An HTTPD server (Nginx)
 * A WSGI server (Gunicorn)
+* An HTTPD server (Nginx)
+* An SSL certificate (LetsEncrypt)
 * A database server (Postgresql)
 * A memory cache (redis)
+* A firewall (UFW)
 
 In addition to provisioning your application's environment, Flask-Live-Starter makes it a snap to:
 
