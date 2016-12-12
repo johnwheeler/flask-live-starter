@@ -36,7 +36,7 @@ Go from 0 to 100 MPH with the infrastructure behind [OldGeekJobs.com](https://ol
 
 ## Introduction
 
-Flask-Live-Starter is a boilerplate Flask application with Fabric tasks that automate the provisioning of:
+Flask-Live-Starter is a boilerplate Flask application with Fabric tasks that automate the installation and provisioning of:
 
 * A Linux box (Debian)
 * A WSGI server (Gunicorn)
