@@ -25,6 +25,12 @@ Go from 0 to 100 MPH with the infrastructure behind [OldGeekJobs.com](https://ol
     - [`remote`](#remote)
     - [`local`](#local)
 - [Technology selection](#technology-selection)
+    - [Debian](#debian)
+    - [Flask](#flask)
+    - [Gunicorn](#gunicorn)
+    - [Nginx](#nginx)
+    - [Postgresql](#postgresql)
+    - [Redis](#redis)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -121,5 +127,29 @@ Placeholder
 Placeholder
 
 ## Technology selection
+
+Placeholder
+
+#### Debian
+
+Placeholder
+
+#### Flask
+
+Placeholder
+
+#### Gunicorn
+
+Placeholder
+
+#### Nginx
+
+Placeholder
+
+#### Postgresql
+
+Placeholder
+
+#### Redis
 
 Placeholder
