@@ -5,21 +5,20 @@ from fabric.context_managers import cd
 from .constants import *
 
 
-__all__ = ['system', 'certificate', 'postgres', 'redis']
+__all__ = ['system', 'postgres', 'redis']
 
 
 @task
 def system():
     _system_update_upgrade()
 
-    # firewall
-    _install('ufw')
-    _configure_firewall()
-
     # unattended upgrades
     _install('needrestart')
     _install('unattended-upgrades')
     sudo('cp /usr/share/unattended-upgrades/20auto-upgrades /etc/apt/apt.conf.d/20auto-upgrades')
+
+    # firewall
+    _install('ufw')
 
     # python related
     _install('python-dev')
@@ -89,12 +88,6 @@ def redis():
     sudo('rm redis-stable.tar.gz')
 
 
-@task
-def certificate():
-    sudo('certbot --nginx --non-interactive --agree-tos --redirect --domain {} --domain {}.{} --email {}'
-         .format(DOMAIN, SUBDOMAIN, DOMAIN, EMAIL))
-
-
 def _system_update_upgrade():
     # backports
     sudo("sh -c 'echo deb http://ftp.us.debian.org/debian/ jessie-backports main >> /etc/apt/sources.list'")
@@ -106,14 +99,3 @@ def _system_update_upgrade():
 
 def _install(pkg):
     sudo('DEBIAN_FRONTEND=noninteractive apt-get install {} -y'.format(pkg))
-
-
-def _configure_firewall():
-    # allow http
-    sudo('ufw allow 80/tcp')
-    # allow https
-    sudo('ufw allow 443/tcp')
-    # allow ssh
-    sudo('ufw allow 22/tcp')
-    # enable firewall
-    sudo('ufw --force enable')

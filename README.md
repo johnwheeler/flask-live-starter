@@ -64,10 +64,24 @@ flask run
 #### Prepare the remote server
 
 ```
+# install python web server components
 fab install.system
+
+# install postgres
 fab install.postgres
+
+# install redis
 fab install.redis
-fab remote.initdb
+
+# provision a firewall that allows HTTP, HTTPS, and SSH only
+fab provision.firewall
+
+# provision a new database
+fab provision.database
+
+# deploy flask application
 fab remote.deploy
-fab install.certificate
+
+# provision a letsencrypt certificate
+fab provision.certificate
 ```

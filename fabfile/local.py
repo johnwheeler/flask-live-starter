@@ -4,13 +4,7 @@ from fabric.contrib import console
 from .constants import *
 
 
-__all__ = ['initdb', 'restore_remote']
-
-
-@task
-def initdb():
-    local('createuser {} -P'.format(APP_NAME))
-    local('createdb {} -O {}'.format(APP_NAME, APP_NAME))
+__all__ = ['restore_remote']
 
 
 @task

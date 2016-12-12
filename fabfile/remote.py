@@ -8,7 +8,7 @@ from jinja2 import Environment, FileSystemLoader
 from .constants import *
 
 
-__all__ = ['deploy', 'undeploy', 'backup', 'tail', 'reset_log', 'initdb']
+__all__ = ['deploy', 'undeploy', 'backup', 'tail', 'reset_log']
 
 
 @task
@@ -44,12 +44,6 @@ def undeploy():
     if files.exists(REMOTE_NGINX_CONF_FILE):
         sudo('rm {}'.format(REMOTE_NGINX_CONF_FILE))
         sudo('service nginx restart')
-
-
-@task
-def initdb():
-    sudo('createuser {} -P'.format(APP_NAME), user='postgres')
-    sudo('createdb {} -O {}'.format(APP_NAME, APP_NAME), user='postgres')
 
 
 @task
