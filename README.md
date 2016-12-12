@@ -63,8 +63,8 @@ flask run
 #### Prepare the remote server
 
 ```
-fab provision.system
+fab install.system
 fab remote.initdb
 fab remote.deploy
-fab provision.certificate
+fab install.certificate
 ```

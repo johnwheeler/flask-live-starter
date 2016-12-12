@@ -1,1 +1,1 @@
-from . import settings, provision, remote, local
+from . import settings, install, remote, local

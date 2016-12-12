@@ -3,7 +3,7 @@ from fabric.api import task, sudo
 from .constants import *
 
 
-__all__ = ['system', 'certificate']
+__all__ = ['system', 'certificate', 'postgres']
 
 
 @task
@@ -24,29 +24,30 @@ def system():
     _install('gunicorn')
     # httpd
     _install('nginx')
-    # postgres
+
+
+@task
+def postgres():
+    sudo("sh -c 'echo deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main > /etc/apt/sources.list.d/pgdg.list'")
+    sudo('wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -')
+    sudo('apt-get update')
+
     pg_version = '9.6'
     _install('postgresql-{}'.format(pg_version))
     _install('postgresql-client-{}'.format(pg_version))
     _install('postgresql-server-dev-{}'.format(pg_version))
     _install('postgresql-contrib-{}'.format(pg_version))
-    # certbot (letsencrypt)
-    _install('python-certbot-nginx -t jessie-backports')
 
 
 @task
 def certificate():
+    _install('python-certbot-nginx -t jessie-backports')
     sudo('certbot --nginx --non-interactive --agree-tos --redirect --domain {} --domain {}.{} --email {}'.format(DOMAIN, SUBDOMAIN, DOMAIN, EMAIL))
 
 
 def _system_update_upgrade():
     # backports
     sudo("sh -c 'echo deb http://ftp.us.debian.org/debian/ jessie-backports main >> /etc/apt/sources.list'")
-
-    # postgresql
-    sudo("sh -c 'echo deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main > /etc/apt/sources.list.d/pgdg.list'")
-    sudo('wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -')
-
     sudo('apt-get update')
     sudo('apt-get upgrade -y')
 
