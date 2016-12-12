@@ -17,6 +17,7 @@ Flask-Live-Starter is a boilerplate Flask application with Fabric tasks that aut
 * An HTTPD server (Nginx)
 * A WSGI server (Gunicorn)
 * A database server (Postgresql)
+* A memory cache (redis)
 
 In addition to provisioning your application's environment, Flask-Live-Starter makes it a snap to:
 
