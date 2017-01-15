@@ -86,6 +86,8 @@ deployment concern.
 * `remote` includes tasks to deploy your application, backup your database, and tail and grep logs
 * `local` has one task that restores the latest backup to your local development database so you can work off your production dataset.
 
+[See the tasks in each namespace for details](https://github.com/johnwheeler/flask-live-starter/tree/master/fabfile)
+
 <!--
 
 #### `install`
