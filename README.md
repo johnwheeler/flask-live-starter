@@ -5,9 +5,7 @@
 
 # Welcome to Flask-Live-Starter
 
-***Note:*** *This is an alpha release that supports Unix-based development environments only.*
-
-Go from 0 to 100 MPH with the infrastructure behind [OldGeekJobs.com](https://oldgeekjobs.com).
+Deploy Flask apps fast while maintaining control over your infrastructure Edit
 
 ## Introduction
 
