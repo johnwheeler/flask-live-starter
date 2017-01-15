@@ -9,31 +9,6 @@
 
 Go from 0 to 100 MPH with the infrastructure behind [OldGeekJobs.com](https://oldgeekjobs.com).
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [Introduction](#introduction)
-- [Quickstart](#quickstart)
-    - [Download flask-live-starter](#download-flask-live-starter)
-    - [Prepare your local development environment](#prepare-your-local-development-environment)
-    - [Configure your application for development](#configure-your-application-for-development)
-    - [Prepare the remote server](#prepare-the-remote-server)
-- [Fabric Tasks](#fabric-tasks)
-    - [`install`](#install)
-    - [`provision`](#provision)
-    - [`remote`](#remote)
-    - [`local`](#local)
-- [Technology selection](#technology-selection)
-    - [Debian](#debian)
-    - [Flask](#flask)
-    - [Gunicorn](#gunicorn)
-    - [Nginx](#nginx)
-    - [Postgresql](#postgresql)
-    - [Redis](#redis)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 ## Introduction
 
 Flask-Live-Starter is a boilerplate Flask application with Fabric tasks that automate the installation and provisioning of:
@@ -81,11 +56,12 @@ nano fabfile/settings.py
 cp app/settings.cfg.example app/settings.cfg
 nano app/settings.cfg
 
-fab local.initdb
+createuser <app_name> -P
+createdb <app_name> -O <app_name>
 
-export FLASK_APP=app/views.py
-export FLASK_DEBUG=1
-flask run
+# where <app_name> is the value of env._app_name in fabfile/settings.py
+
+python app/views.py
 ```
 
 #### Prepare the remote server
@@ -109,6 +85,8 @@ deployment concern.
 * `provision` is for provisioning a certificate, a firewall, and a database
 * `remote` includes tasks to deploy your application, backup your database, and tail and grep logs
 * `local` has one task that restores the latest backup to your local development database so you can work off your production dataset.
+
+<!--
 
 #### `install`
 
@@ -153,3 +131,4 @@ Placeholder
 #### Redis
 
 Placeholder
+-->
