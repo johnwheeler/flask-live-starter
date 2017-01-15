@@ -5,7 +5,7 @@
 
 # Welcome to Flask-Live-Starter
 
-Deploy Flask apps fast while maintaining control over your infrastructure Edit
+Deploy Flask apps fast while maintaining control over your infrastructure
 
 ## Introduction
 
