@@ -5,7 +5,7 @@
 
 # Welcome to Flask-Live-Starter
 
-Deploy Flask apps fast while maintaining control over your infrastructure
+Starting a Flask application in development mode on your local machine is super easy. Getting it up and running on production infrastructure is a harder. Flask-Live-Starter prescribes a set of best-of-breed infrastructure components that make deploying to VPS instances a snap. It includes Fabric task that automate provisioning, deployment, and common post-deployment operations (database backup and log tailing). Deploy early and easily with Flask-Live-Starter!
 
 ## Introduction
 
@@ -24,6 +24,8 @@ In addition to provisioning your application's environment, Flask-Live-Starter m
 * Deploy your Flask application
 * Backup your production database
 * Tail your production logs
+
+Flask-Live-Starter is all about backend provisioning and deployment. It makes no assumptions about and gives no guidance on front-end frameworks. It only focuses on server-side code, so you're free to use JQuery, Angular, Bootstrap, or whatever you wish.
 
 ## Quickstart
 
