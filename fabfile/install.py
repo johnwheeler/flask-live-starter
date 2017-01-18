@@ -80,7 +80,7 @@ def redis():
     sed('/etc/redis/6379.conf', '^dir ./$',
         'dir /var/redis/6379', use_sudo=True)
 
-    # # update script init links
+    # update script init links
     sudo('update-rc.d redis_6379 defaults')
     # start redis system service
     sudo('service redis_6379 start')
