@@ -1,6 +1,7 @@
 ![Do it live!](http://i.imgur.com/MgdS9jJ.jpg)
 
 [![bird] Follow @_johnwheeler for updates](https://twitter.com/_johnwheeler)
+
 [bird]: http://i.imgur.com/UUARvmc.png
 
 # Welcome to Flask-Live-Starter
